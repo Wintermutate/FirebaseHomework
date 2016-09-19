@@ -51,7 +51,20 @@ var config = {
   	var trainFreq = snapshot.val().trainFreq;
 
   	// console.log(trainName);
-  	
+  	var removeButton = $("<button>");
+  	removeButton.attr('type', 'submit');
+  	removeButton.addClass('btn btn-success');
+  	removeButton.attr('data-name', trainName);
+  	removeButton.attr('id', 'rButton');
+  	// removeButton.text('Remove');
+
+  	var updateButton = $("<button>");
+  	updateButton.attr('type', 'submit');
+  	updateButton.addClass('btn btn-success');
+  	updateButton.attr('data-name', trainName);
+  	updateButton.attr('id', 'uButton');
+  	// updateButton.text('Update');
+
   	var diffTime  = moment().diff(moment(trainFirstTime), "minutes");
   	
   	var tRemainder = diffTime % trainFreq;
@@ -62,7 +75,7 @@ var config = {
   	
   	var displayNextTrain = moment(nextTrain).format("hh:mm");
   	
-  	$("#trainDisplay > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + displayNextTrain + "</td><td>" + tMinutesTillTrain + "</td></tr>");
+  	$("#trainDisplay > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + displayNextTrain + "</td><td>" + tMinutesTillTrain + "</td><td>"+ updateButton + "</td><td>"+ removeButton + "</td></tr>");
 	
   });
 
