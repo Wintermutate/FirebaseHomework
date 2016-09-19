@@ -11,6 +11,17 @@ var config = {
 
   var database = firebase.database();
 
+
+  // var updateButton = $("<button>");
+  // updateButton.attr("type", "submit");
+  // updateButton.addClass("btn btn-success uButton");
+  // updateButton.attr("data-name", trainName);
+
+  // var removeButton = $("<button>");
+  // removeButton.attr("type", "submit");
+  // removeButton.addClass("btn btn-success rButton");
+  // removeButton.attr("data-name", trainName);
+
   $('#trainInfo').on('click', function(){
 
 	var trainName = $('#tName').val().trim();
@@ -52,19 +63,27 @@ var config = {
 
   	// console.log(trainName);
   	var removeButton = $("<button>");
-  	removeButton.attr('type', 'submit');
-  	removeButton.addClass('btn btn-success');
-  	removeButton.attr('data-name', trainName);
-  	removeButton.attr('id', 'rButton');
+  	removeButton.attr("type", "submit");
+  	removeButton.addClass("btn btn-success rButton");
+  	removeButton.attr("data-name", trainName);
+  	// removeButton.attr("id", "rButton");
   	// removeButton.text('Remove');
 
   	var updateButton = $("<button>");
-  	updateButton.attr('type', 'submit');
-  	updateButton.addClass('btn btn-success');
-  	updateButton.attr('data-name', trainName);
-  	updateButton.attr('id', 'uButton');
+  	updateButton.attr("type", "submit");
+  	updateButton.addClass("btn btn-success uButton");
+  	updateButton.attr("data-name", trainName);
+  	// updateButton.attr('id', 'uButton');
   	// updateButton.text('Update');
 
+    // var updateButton = $('<button>', {
+    //   text: 'Update',
+    //   id: 'uButton',
+    //   type: 'submit',
+    //   class: 'btn btn-success',
+    //   data-name: trainName
+
+    // });
   	var diffTime  = moment().diff(moment(trainFirstTime), "minutes");
   	
   	var tRemainder = diffTime % trainFreq;
