@@ -40,6 +40,34 @@ var config = {
 	$('#tFrequency').val("");			
   	
   	return false;
-  })
+  });
 
-})
+  database.ref().on("child_added", function(snapshot, prevChildKey){
+  	// console.log(snapshot.val());
+  	
+  	var trainName = snapshot.val().trainName;
+  	var trainDest = snapshot.val().trainDest;
+  	var trainFirstTime = snapshot.val().trainFirst;
+  	var trainFreq = snapshot.val().trainFreq;
+
+  	// console.log(trainName);
+  	
+  	// console.log(firstTimeConverted);
+
+  	var currentTime = moment();
+
+  	var diffTime  = moment().diff(moment(trainFirstTime), "minutes")
+  	
+  	var tRemainder = diffTime % trainFreq;
+
+  	var tMinutesTillTrain = trainFreq - tRemainder;
+
+  	var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+  	
+  	var displayNextTrain = moment(nextTrain).format("hh:mm");
+  	
+  	$("#trainDisplay > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + displayNextTrain + "</td><td>" + tMinutesTillTrain + "</td></tr>");
+	
+  });
+
+});
