@@ -52,11 +52,7 @@ var config = {
 
   	// console.log(trainName);
   	
-  	// console.log(firstTimeConverted);
-
-  	var currentTime = moment();
-
-  	var diffTime  = moment().diff(moment(trainFirstTime), "minutes")
+  	var diffTime  = moment().diff(moment(trainFirstTime), "minutes");
   	
   	var tRemainder = diffTime % trainFreq;
 
