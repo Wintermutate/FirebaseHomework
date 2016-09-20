@@ -11,22 +11,22 @@ var config = {
 
   var database = firebase.database();
 
-  function run(){
-      counter = setInterval(decrement, 1000);
-  }
+  // function run(){
+  //     counter = setInterval(decrement, 1000);
+  // }
 
-  function decrement(){
-      number--;
-      if (number === 0){
-          stop();
-      }
-  }
+  // function decrement(){
+  //     number--;
+  //     if (number === 0){
+  //         stop();
+  //     }
+  // }
 
-  function stop(){
-    dataCore();
-    clearInterval(counter);
+  // function stop(){
+  //   dataCore();
+  //   clearInterval(counter);
 
-  }
+  // }
   // var updateButton = $("<button>");
   // updateButton.attr("type", "submit");
   // updateButton.addClass("btn btn-success uButton");
@@ -68,7 +68,7 @@ var config = {
   	return false;
   });
 
-  function dataCore () { database.ref().on("child_added", function(snapshot, prevChildKey){
+database.ref().on("child_added", function(snapshot, prevChildKey){
   	// console.log(snapshot.val());
   	
   	var trainName = snapshot.val().trainName;
@@ -82,14 +82,14 @@ var config = {
   	removeButton.addClass("btn btn-success rButton");
   	removeButton.attr("data-name", trainName);
   	// removeButton.attr("id", "rButton");
-  	// removeButton.text('Remove');
+  	removeButton.text("Remove");
 
   	var updateButton = $("<button>");
   	updateButton.attr("type", "submit");
   	updateButton.addClass("btn btn-success uButton");
   	updateButton.attr("data-name", trainName);
   	// updateButton.attr('id', 'uButton');
-  	// updateButton.text('Update');
+  	updateButton.text("Update");
 
     // var updateButton = $('<button>', {
     //   text: 'Update',
@@ -99,6 +99,8 @@ var config = {
     //   data-name: trainName
 
     // });
+    // console.log(updateButton);
+    // console.log(removeButton);
   	var diffTime  = moment().diff(moment(trainFirstTime), "minutes");
   	
   	var tRemainder = diffTime % trainFreq;
@@ -109,10 +111,12 @@ var config = {
   	
   	var displayNextTrain = moment(nextTrain).format("hh:mm");
   	
-  	$("#trainDisplay > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + displayNextTrain + "</td><td>" + tMinutesTillTrain + "</td><td>"+ updateButton + "</td><td>"+ removeButton + "</td></tr>");
-	
+  	$("#trainDisplay > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + displayNextTrain + "</td><td>" + tMinutesTillTrain + "</td><td>"+ updateButton[0].outerHTML + "</td><td>"+ removeButton[0].outerHTML + "</td></tr>");
+	  
   });
-}
 
-run();
+$(document).on('click','.uButton', function(){
+    // console.log($(this).data('name'));
+    
+});
 });
