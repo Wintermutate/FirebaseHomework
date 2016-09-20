@@ -11,7 +11,22 @@ var config = {
 
   var database = firebase.database();
 
+  function run(){
+      counter = setInterval(decrement, 1000);
+  }
 
+  function decrement(){
+      number--;
+      if (number === 0){
+          stop();
+      }
+  }
+
+  function stop(){
+    dataCore();
+    clearInterval(counter);
+
+  }
   // var updateButton = $("<button>");
   // updateButton.attr("type", "submit");
   // updateButton.addClass("btn btn-success uButton");
@@ -53,7 +68,7 @@ var config = {
   	return false;
   });
 
-  database.ref().on("child_added", function(snapshot, prevChildKey){
+  function dataCore () { database.ref().on("child_added", function(snapshot, prevChildKey){
   	// console.log(snapshot.val());
   	
   	var trainName = snapshot.val().trainName;
@@ -97,5 +112,7 @@ var config = {
   	$("#trainDisplay > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + displayNextTrain + "</td><td>" + tMinutesTillTrain + "</td><td>"+ updateButton + "</td><td>"+ removeButton + "</td></tr>");
 	
   });
+}
 
+run();
 });
