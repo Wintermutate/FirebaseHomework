@@ -161,6 +161,24 @@ database.ref().once("value", function(snapshot){
    $('#tDestination').val($(this).parent().parent().children("td").eq(1).text());
    $('#tFirstTime').val($(this).parent().parent().children("td").eq(2).text());
    $('#tFrequency').val($(this).parent().parent().children("td").eq(3).text());
+   $('#updateTrainInfo').css('display', 'block');
+   $('#updateTrainInfo').on('click', function(){
+     $(this).css('display', 'none');
+   
+   var trainName = $('#tName').val().trim();
+   var trainDest = $('#tDestination').val().trim();
+   var trainFirstTime = $('#tFirstTime').val().trim();
+   var trainFreq = $('#tFrequency').val().trim();
+
+     database.ref(dataKey).set({
+    trainName: trainName,
+    trainDest: trainDest,
+    trainFirst: trainFirstTime,
+    trainFreq: trainFreq
+  })
+     
+   })
 
   });
+
 });
