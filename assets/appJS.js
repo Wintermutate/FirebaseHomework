@@ -1,4 +1,6 @@
 var trainKey = "";
+var flag = false;
+var flag2 = false;  
 
 $(document).ready(function(){
 
@@ -32,8 +34,8 @@ var config = {
 	}
 // Logging object for testing
 // 	console.log(newTrain);
-	 trainKey = database.ref().push(newTrain).path.o[0];
-   console.log(trainKey);
+	 database.ref().push(newTrain);
+   // console.log(trainKey);
 
 // var ref = database.ref().push();
 //   console.log(ref.ref().key());
@@ -48,48 +50,110 @@ var config = {
   	return false;
   });
 
-database.ref().on("child_added", function(snapshot, prevChildKey){
-  	// console.log(snapshot.val());
-  	// console.log(snapshot.key);
-    var newTrainKe = firebase.database().ref().limitToLast(1);
-    console.log(newTrainKe);
-  	var trainName = snapshot.val().trainName;
-  	var trainDest = snapshot.val().trainDest;
-  	var trainFirstTime = snapshot.val().trainFirst;
-  	var trainFreq = snapshot.val().trainFreq;
+database.ref().limitToLast(1).on("child_added", function(snapshot){
+  var childKey = snapshot.key;
+  // console.log(childKey);
+if (flag2 == true){
+  var trainName = snapshot.val().trainName;
+    var trainDest = snapshot.val().trainDest;
+    var trainFirstTime = snapshot.val().trainFirst;
+    var trainFreq = snapshot.val().trainFreq;
 
-  	// console.log(trainName);
-  	var removeButton = $("<button>");
-  	removeButton.attr("type", "submit");
-  	removeButton.addClass("btn btn-success rButton");
-  	removeButton.attr("data-name", trainName);
-    if (trainKey){
-    removeButton.attr("data-key", trainKey);
-    }
-  	removeButton.text("Remove");
+    // console.log(trainName);
+    var removeButton = $("<button>");
+    removeButton.attr("type", "submit");
+    removeButton.addClass("btn btn-success rButton");
+    removeButton.attr("data-name", trainName);
+    removeButton.attr("data-key", snapshot.key);
+    removeButton.text("Remove");
 
-  	var updateButton = $("<button>");
-  	updateButton.attr("type", "submit");
-  	updateButton.addClass("btn btn-success uButton");
-  	updateButton.attr("data-name", trainName);
-    if (trainKey){
-    updateButton.attr("data-key", trainKey);
-    }
-  	updateButton.text("Update");
+    var updateButton = $("<button>");
+    updateButton.attr("type", "submit");
+    updateButton.addClass("btn btn-success uButton");
+    updateButton.attr("data-name", trainName);
+    updateButton.attr("data-key", snapshot.key);
+    updateButton.text("Update");
 
-  	var diffTime  = moment().diff(moment(trainFirstTime), "minutes");
-  	
-  	var tRemainder = diffTime % trainFreq;
+    var diffTime  = moment().diff(moment(trainFirstTime), "minutes");
+    
+    var tRemainder = diffTime % trainFreq;
 
-  	var tMinutesTillTrain = trainFreq - tRemainder;
+    var tMinutesTillTrain = trainFreq - tRemainder;
 
-  	var nextTrain = moment().add(tMinutesTillTrain, "minutes");
-  	
-  	var displayNextTrain = moment(nextTrain).format("hh:mm");
-  	
-  	$("#trainDisplay > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + displayNextTrain + "</td><td>" + tMinutesTillTrain + "</td><td>"+ updateButton[0].outerHTML + "</td><td>"+ removeButton[0].outerHTML + "</td></tr>");
-	  
+    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    
+    var displayNextTrain = moment(nextTrain).format("hh:mm");
+    
+    $("#trainDisplay > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + displayNextTrain + "</td><td>" + tMinutesTillTrain + "</td><td>"+ updateButton[0].outerHTML + "</td><td>"+ removeButton[0].outerHTML + "</td></tr>");
+}
+    flag2 = true; 
+    console.log("finished");
+
+});
+
+database.ref().once("value", function(snapshot){
+  
+  if (flag == false){
+  
+  snapshot.forEach(function(childSnapshot){
+    
+    console.log(childSnapshot.key)
+    var trainName = childSnapshot.val().trainName;
+    var trainDest = childSnapshot.val().trainDest;
+    var trainFirstTime = childSnapshot.val().trainFirst;
+    var trainFreq = childSnapshot.val().trainFreq;
+
+    // console.log(trainName);
+    var removeButton = $("<button>");
+    removeButton.attr("type", "submit");
+    removeButton.addClass("btn btn-success rButton");
+    removeButton.attr("data-name", trainName);
+    removeButton.attr("data-key", childSnapshot.key);
+    removeButton.text("Remove");
+
+    var updateButton = $("<button>");
+    updateButton.attr("type", "submit");
+    updateButton.addClass("btn btn-success uButton");
+    updateButton.attr("data-name", trainName);
+    updateButton.attr("data-key", childSnapshot.key);
+    updateButton.text("Update");
+
+    var diffTime  = moment().diff(moment(trainFirstTime), "minutes");
+    
+    var tRemainder = diffTime % trainFreq;
+
+    var tMinutesTillTrain = trainFreq - tRemainder;
+
+    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    
+    var displayNextTrain = moment(nextTrain).format("hh:mm");
+    
+    $("#trainDisplay > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + displayNextTrain + "</td><td>" + tMinutesTillTrain + "</td><td>"+ updateButton[0].outerHTML + "</td><td>"+ removeButton[0].outerHTML + "</td></tr>");
+
+    flag = true; 
+  });
+}
+
+});
+
+  $(document).on("click",".rButton", function(){
+    
+    var dataKey = $(this).data("key");
+
+    database.ref(dataKey).remove();
+
+    flag2 = false;
+
+    console.log("finished2")
+
+    $(this).parent().parent().remove();
+
   });
 
+  $(document).on("click", ".uButton", function(){
 
+    var dataKey = $(this).data("key");
+
+
+  });
 });
