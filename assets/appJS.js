@@ -54,7 +54,8 @@ database.ref().limitToLast(1).on("child_added", function(snapshot){
   var childKey = snapshot.key;
   // console.log(childKey);
 if (flag2 == true){
-  var trainName = snapshot.val().trainName;
+  
+    var trainName = snapshot.val().trainName;
     var trainDest = snapshot.val().trainDest;
     var trainFirstTime = snapshot.val().trainFirst;
     var trainFreq = snapshot.val().trainFreq;
@@ -128,7 +129,7 @@ database.ref().once("value", function(snapshot){
     
     var displayNextTrain = moment(nextTrain).format("hh:mm");
     
-    $("#trainDisplay > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + displayNextTrain + "</td><td>" + tMinutesTillTrain + "</td><td>"+ updateButton[0].outerHTML + "</td><td>"+ removeButton[0].outerHTML + "</td></tr>");
+    $("#trainDisplay > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFirstTime + "</td><td>" + trainFreq + "</td><td>" + displayNextTrain + "</td><td>" + tMinutesTillTrain + "</td><td>"+ updateButton[0].outerHTML + "</td><td>"+ removeButton[0].outerHTML + "</td></tr>");
 
     flag = true; 
   });
@@ -154,6 +155,12 @@ database.ref().once("value", function(snapshot){
 
     var dataKey = $(this).data("key");
 
+    alert("Change the info!!");
+
+   $('#tName').val($(this).data('name'));
+   $('#tDestination').val($(this).parent().parent().children("td").eq(1).text());
+   $('#tFirstTime').val($(this).parent().parent().children("td").eq(2).text());
+   $('#tFrequency').val($(this).parent().parent().children("td").eq(3).text());
 
   });
 });
