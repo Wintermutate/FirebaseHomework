@@ -1,3 +1,5 @@
+var trainKey = "";
+
 $(document).ready(function(){
 
 var config = {
@@ -10,36 +12,10 @@ var config = {
   firebase.initializeApp(config);
 
   var database = firebase.database();
-
-  // function run(){
-  //     counter = setInterval(decrement, 1000);
-  // }
-
-  // function decrement(){
-  //     number--;
-  //     if (number === 0){
-  //         stop();
-  //     }
-  // }
-
-  // function stop(){
-  //   dataCore();
-  //   clearInterval(counter);
-
-  // }
-  // var updateButton = $("<button>");
-  // updateButton.attr("type", "submit");
-  // updateButton.addClass("btn btn-success uButton");
-  // updateButton.attr("data-name", trainName);
-
-  // var removeButton = $("<button>");
-  // removeButton.attr("type", "submit");
-  // removeButton.addClass("btn btn-success rButton");
-  // removeButton.attr("data-name", trainName);
-
+  
   $('#trainInfo').on('click', function(){
 
-	var trainName = $('#tName').val().trim();
+	  var trainName = $('#tName').val().trim();
   	var trainDest = $('#tDestination').val().trim();
   	var trainFirstTime = moment($('#tFirstTime').val().trim()).format("HHmm");
   	var trainFreq = $('#tFrequency').val().trim();
@@ -56,7 +32,11 @@ var config = {
 	}
 // Logging object for testing
 // 	console.log(newTrain);
-	database.ref().push(newTrain);
+	 trainKey = database.ref().push(newTrain).path.o[0];
+   console.log(trainKey);
+
+// var ref = database.ref().push();
+//   console.log(ref.ref().key());
 
 	alert("Train succesfully added");
 
@@ -70,7 +50,9 @@ var config = {
 
 database.ref().on("child_added", function(snapshot, prevChildKey){
   	// console.log(snapshot.val());
-  	
+  	// console.log(snapshot.key);
+    var newTrainKe = firebase.database().ref().limitToLast(1);
+    console.log(newTrainKe);
   	var trainName = snapshot.val().trainName;
   	var trainDest = snapshot.val().trainDest;
   	var trainFirstTime = snapshot.val().trainFirst;
@@ -81,26 +63,20 @@ database.ref().on("child_added", function(snapshot, prevChildKey){
   	removeButton.attr("type", "submit");
   	removeButton.addClass("btn btn-success rButton");
   	removeButton.attr("data-name", trainName);
-  	// removeButton.attr("id", "rButton");
+    if (trainKey){
+    removeButton.attr("data-key", trainKey);
+    }
   	removeButton.text("Remove");
 
   	var updateButton = $("<button>");
   	updateButton.attr("type", "submit");
   	updateButton.addClass("btn btn-success uButton");
   	updateButton.attr("data-name", trainName);
-  	// updateButton.attr('id', 'uButton');
+    if (trainKey){
+    updateButton.attr("data-key", trainKey);
+    }
   	updateButton.text("Update");
 
-    // var updateButton = $('<button>', {
-    //   text: 'Update',
-    //   id: 'uButton',
-    //   type: 'submit',
-    //   class: 'btn btn-success',
-    //   data-name: trainName
-
-    // });
-    // console.log(updateButton);
-    // console.log(removeButton);
   	var diffTime  = moment().diff(moment(trainFirstTime), "minutes");
   	
   	var tRemainder = diffTime % trainFreq;
@@ -115,8 +91,5 @@ database.ref().on("child_added", function(snapshot, prevChildKey){
 	  
   });
 
-$(document).on('click','.uButton', function(){
-    // console.log($(this).data('name'));
-    
-});
+
 });
