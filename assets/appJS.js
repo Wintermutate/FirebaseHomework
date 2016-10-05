@@ -162,6 +162,7 @@ database.ref().once("value", function(snapshot){
    $('#tFirstTime').val($(this).parent().parent().children("td").eq(2).text());
    $('#tFrequency').val($(this).parent().parent().children("td").eq(3).text());
    $('#updateTrainInfo').css('display', 'block');
+   
    $('#updateTrainInfo').on('click', function(){
      $(this).css('display', 'none');
    
